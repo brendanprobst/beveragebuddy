@@ -35,10 +35,10 @@ async function editLastMessage(user: any, content: string): Promise<void> {
 	const dmChannel = user.dmChannel;
 	if (!dmChannel) return;
 
-	const messages = await dmChannel.messages.fetch({ limit: 2 });
-	console.log(messages);
-	if (messages.length > 1) {
-		const lastMessage = messages[1];
+	const messages = await dmChannel.messages.fetch({ limit: 1 });
+
+	if (messages.length == 1) {
+		const lastMessage = messages[0];
 		await lastMessage.edit(lastMessage.content.replace("<@.*>/", ""));
 	}
 }
@@ -63,7 +63,11 @@ module.exports = {
 			const intervalMs = interval * 60000; // FOR DEV ONLY, revert to 60000 * interval;
 
 			await interaction.reply(
-				`You will receive a message every ${interval} minutes. Hope you enjoy your beverage!`
+				`<@${
+					user.id
+				}> I see you're enjoying a nice warm beverage. You will send a reminder to take a sip every ${interval} minute${
+					interval !== 1 ? "s" : ""
+				}. Hope you enjoy your beverage!`
 			);
 
 			// Set up an interval to send subsequent messages
@@ -77,12 +81,8 @@ module.exports = {
 			activeIntervals.set(user.id, intervalId);
 		} else {
 			await interaction.reply(
-				"You are already receiving messages. Please use the `/stop` command to stop receiving messages."
+				`<@${user.id}> You are already receiving messages. Please use the "/stop" command to stop receiving messages.`
 			);
-			// await interaction.reply(
-			// 	"We're having issues accessing your discord account. The issue has been recorded and is being looked into. Please try again later."
-			// );
-			// throw new Error(`ERROR: START COMMAND\n${interaction}`);
 		}
 	},
 };
