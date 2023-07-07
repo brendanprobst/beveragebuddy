@@ -23,6 +23,28 @@ const reminderMessages = [
 	"Remember, a cold drink is just a sip away from being warm.",
 	"Take a moment to sip, and let the worries slip.",
 ];
+const confirmationMessages = [
+	"Got it! Starting to brew your command...",
+	"Aye aye, captain! Steeping your instructions now...",
+	"Excellent choice! Stirring in your command...",
+	"Your command has been accepted. One moment while we froth up the details...",
+	"Great choice! Mixing up your request...",
+	"Brewing up your command now...",
+	"Order up! Let's get your command rolling...",
+	"Steeping your command, stay refreshed...",
+	"Starting the infusion of your command...",
+	"Your command is being brewed. Enjoy the aroma...",
+	"Great choice! Distilling your command now...",
+	"Squeezing the freshness out of your command...",
+	"Refreshing! Your command is being chilled...",
+	"Command received! Let's shake things up...",
+	"Your command is accepted. Please wait while we muddle the details...",
+	"Command acknowledged! Heating up the kettle now...",
+	"Alright! Brewing up your request on the double...",
+	"Got it! Let's pour some energy into this command...",
+	"Well noted! Your command is steeping...",
+	"Pouring your command into the pipeline...",
+];
 async function sendHighlightedMessage(
 	user: any,
 	content: string
@@ -61,13 +83,16 @@ module.exports = {
 			let interval = _interval ?? 4;
 			// Convert minutes to milliseconds
 			const intervalMs = interval * 60000; // FOR DEV ONLY, revert to 60000 * interval;
-
+			const randomConfirmationMessage = () =>
+				confirmationMessages[
+					Math.floor(Math.random() * confirmationMessages.length)
+				];
 			await interaction.reply(
 				`<@${
 					user.id
-				}> I see you're enjoying a nice warm beverage. You will send a reminder to take a sip every ${interval} minute${
+				}>, ${randomConfirmationMessage}\n I'll DM you a reminder to take a sip every ${interval} minute${
 					interval !== 1 ? "s" : ""
-				}. Hope you enjoy your beverage!`
+				}. \nHope you enjoy your beverage!`
 			);
 
 			// Set up an interval to send subsequent messages
@@ -75,8 +100,8 @@ module.exports = {
 				const message =
 					reminderMessages[Math.floor(Math.random() * reminderMessages.length)];
 				await sendHighlightedMessage(user, message);
-				await new Promise((resolve) => setTimeout(resolve, intervalMs - 5000));
-				await editLastMessage(user, message);
+				// await new Promise((resolve) => setTimeout(resolve, intervalMs - 5000));
+				// await editLastMessage(user, message);
 			}, intervalMs);
 			activeIntervals.set(user.id, intervalId);
 		} else {

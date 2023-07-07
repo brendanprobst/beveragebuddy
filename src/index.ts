@@ -1,3 +1,5 @@
+import activeIntervals from "./commands/main/activeUserCollection";
+
 require("dotenv").config();
 const fs = require("node:fs");
 const path = require("node:path");
@@ -57,6 +59,10 @@ client.on("error", (error: string) => {
 		.send(`An error occurred:\n\`\`\`\n${error}\n\`\`\``)
 		.catch(console.error); // Handle any error that occurs while sending the DM
 });
-
+client.on("start", () => {
+	console.log("Here we go!");
+	activeIntervals.each((interval) => clearInterval(interval));
+	activeIntervals.clear();
+});
 // Log in to Discord with your client's token
 client.login(token);
