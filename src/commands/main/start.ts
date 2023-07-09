@@ -1,5 +1,5 @@
 import { CommandInteraction, Message, SlashCommandBuilder } from "discord.js";
-import activeIntervals from "./activeUserCollection";
+import activeIntervals from "../../activeUserCollection";
 import { client } from "../../index";
 const reminderMessages = [
 	"Sip now or forever hold your cold beverage.",
@@ -53,6 +53,19 @@ async function sendHighlightedMessage(
 	const message = await user.send(`<@${user.id}> ${content}`);
 	return message;
 }
+
+async function editLastMessage(user: any, content: string): Promise<void> {
+	const dmChannel = user.dmChannel;
+	if (!dmChannel) return;
+
+	const messages = await dmChannel.messages.fetch({ limit: 1 });
+
+	if (messages.length == 1) {
+		const lastMessage = messages[0];
+		await lastMessage.edit(lastMessage.content.replace("<@.*>/", ""));
+	}
+}
+
 async function sendMessageToServerChannel(
 	user: any,
 	content: string
@@ -67,18 +80,6 @@ async function sendMessageToServerChannel(
 		return;
 	}
 }
-async function editLastMessage(user: any, content: string): Promise<void> {
-	const dmChannel = user.dmChannel;
-	if (!dmChannel) return;
-
-	const messages = await dmChannel.messages.fetch({ limit: 1 });
-
-	if (messages.length == 1) {
-		const lastMessage = messages[0];
-		await lastMessage.edit(lastMessage.content.replace("<@.*>/", ""));
-	}
-}
-// Define a collection to store active intervals for each user
 module.exports = {
 	data: new SlashCommandBuilder()
 		.setName("start")
@@ -91,6 +92,7 @@ module.exports = {
 		),
 	async execute(interaction: CommandInteraction) {
 		const user = interaction.user;
+		console.log(user);
 		if (user && !activeIntervals.has(user.id)) {
 			//@ts-expect-error
 			const _interval = interaction.options.getInteger("interval");

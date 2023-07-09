@@ -1,6 +1,6 @@
 require("dotenv").config();
 import { Events } from "discord.js";
-import activeIntervals from "../commands/main/activeUserCollection";
+import activeIntervals from "../activeUserCollection";
 
 module.exports = {
 	name: Events.ClientReady,
@@ -10,6 +10,6 @@ module.exports = {
 		console.log("Here we go!");
 		activeIntervals.each((interval) => clearInterval(interval));
 		activeIntervals.clear();
-		client.channels.cache.get(process.env.CHANNEL_ID).send("Hello here!");
+		client.channels.cache.get(process.env.CHANNEL_ID).send("Hello World!");
 	},
 };

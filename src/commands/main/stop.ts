@@ -1,5 +1,5 @@
 import { CommandInteraction, SlashCommandBuilder } from "discord.js";
-import activeIntervals from "./activeUserCollection";
+import activeIntervals from "../../activeUserCollection";
 
 const stopMessages = [
 	"The steam fades away, signaling a tranquil pause.",
