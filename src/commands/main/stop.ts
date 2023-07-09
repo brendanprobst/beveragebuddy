@@ -42,7 +42,9 @@ module.exports = {
 
 			await interaction.reply(message);
 		} else {
-			await interaction.reply("You are not currently receiving messages.");
+			await interaction.reply(
+				`<@${user.id}> You are not currently receiving messages.`
+			);
 		}
 	},
 };
