@@ -90,7 +90,7 @@ module.exports = {
 			await interaction.reply(
 				`<@${
 					user.id
-				}>, ${randomConfirmationMessage}\n I'll DM you a reminder to take a sip every ${interval} minute${
+				}>, ${randomConfirmationMessage()}\n I'll DM you a reminder to take a sip every ${interval} minute${
 					interval !== 1 ? "s" : ""
 				}. \nHope you enjoy your beverage!`
 			);
