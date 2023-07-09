@@ -1,12 +1,10 @@
-import activeIntervals from "./commands/main/activeUserCollection";
-
 require("dotenv").config();
 const fs = require("node:fs");
 const path = require("node:path");
 const { Client, Collection, Events, GatewayIntentBits } = require("discord.js");
 const token: string = process.env.DISCORD_TOKEN as string;
 
-const client = new Client({ intents: [GatewayIntentBits.Guilds] }); // Create a new client instance
+export const client = new Client({ intents: [GatewayIntentBits.Guilds] }); // Create a new client instance
 client.commands = new Collection(); // register a commands collection on the client
 const foldersPath = path.join(__dirname, "commands");
 const commandFolders = fs.readdirSync(foldersPath);
@@ -58,11 +56,6 @@ client.on("error", (error: string) => {
 	ownerUser
 		.send(`An error occurred:\n\`\`\`\n${error}\n\`\`\``)
 		.catch(console.error); // Handle any error that occurs while sending the DM
-});
-client.on("start", () => {
-	console.log("Here we go!");
-	activeIntervals.each((interval) => clearInterval(interval));
-	activeIntervals.clear();
 });
 // Log in to Discord with your client's token
 client.login(token);

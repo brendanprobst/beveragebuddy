@@ -1,5 +1,6 @@
 import { CommandInteraction, Message, SlashCommandBuilder } from "discord.js";
 import activeIntervals from "./activeUserCollection";
+import { client } from "../../index";
 const reminderMessages = [
 	"Sip now or forever hold your cold beverage.",
 	"A beverage un-sipped is a beverage wasted.",
@@ -52,7 +53,20 @@ async function sendHighlightedMessage(
 	const message = await user.send(`<@${user.id}> ${content}`);
 	return message;
 }
+async function sendMessageToServerChannel(
+	user: any,
+	content: string
+): Promise<void> {
+	const channel = process.env.CHANNEL_ID as string;
 
+	if (channel) {
+		client.channels.cache
+			.get(process.env.CHANNEL_ID)
+			.send(`<@${user.id}> ${content}`);
+	} else {
+		return;
+	}
+}
 async function editLastMessage(user: any, content: string): Promise<void> {
 	const dmChannel = user.dmChannel;
 	if (!dmChannel) return;
@@ -99,9 +113,8 @@ module.exports = {
 			const intervalId = setInterval(async () => {
 				const message =
 					reminderMessages[Math.floor(Math.random() * reminderMessages.length)];
-				await sendHighlightedMessage(user, message);
-				// await new Promise((resolve) => setTimeout(resolve, intervalMs - 5000));
-				// await editLastMessage(user, message);
+				// await sendHighlightedMessage(user, message);
+				await sendMessageToServerChannel(user, message);
 			}, intervalMs);
 			activeIntervals.set(user.id, intervalId);
 		} else {
